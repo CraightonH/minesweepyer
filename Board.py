@@ -67,7 +67,6 @@ class Board:
             self.board[loc[0] + 1, loc[1] + 1] += 1
 
     def toString(self, hidden=True):
-        # retString = "{:^5}" * self.COLS
         retString = ""
         for i in range(self.ROWS):
             retString += "\n"
