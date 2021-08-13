@@ -80,7 +80,7 @@ class Board:
                 retString += "+"
                 if j < self.COLS:
                     retString += "-----"
-                if i < self.ROWS - 1 and j == self.COLS - 1:
+                if i < self.ROWS and j == self.COLS - 1:
                     retString += "+\n"
                     for h in range(self.COLS):
                         retString += "|  " 
@@ -88,6 +88,9 @@ class Board:
                         retString += "  "
                         if h == self.COLS-1:
                             retString += "|"
+        # print final row border
+        retString += "\n"
+        retString += "+-----" * self.COLS
         retString += "+"
         return retString
 
@@ -100,7 +103,7 @@ class Board:
     def findZeroes(self, location):
         if location in self.solutionBoard:
             if self.solutionBoard[location] == 0 and self.gameBoard[location] == "?":
-                print("found 0 at " + str(location))
+                # print("found 0 at " + str(location))
                 self.gameBoard[location] = self.solutionBoard[location]
                 # right
                 self.findZeroes((location[0], location[1] + 1))
