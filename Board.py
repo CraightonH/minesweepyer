@@ -31,6 +31,7 @@ class Board:
             self.max_mines = mines
         self.generateMineLocations()
         self.generateBoardHints()
+        print("have fun!")
         print(self.toString())
         print(self.toString(hidden=False))
         
