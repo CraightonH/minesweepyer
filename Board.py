@@ -38,9 +38,9 @@ class Board:
     def generateMineLocations(self):
         print("generating mine locations...")
         while len(self.mine_locations) < self.max_mines:
-            randx = random.randint(0, self.COLS - 1)
-            randy = random.randint(0, self.ROWS - 1)
-            self.mine_locations.add((randx, randy))
+            randcol = random.randint(0, self.COLS - 1)
+            randrow = random.randint(0, self.ROWS - 1)
+            self.mine_locations.add((randrow, randcol))
 
     def generateBoardHints(self):
         print("generating board hints...")
