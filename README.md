@@ -1,4 +1,4 @@
-# minesweepyer
+### minesweepyer
 
 A python minesweeper game.
 
