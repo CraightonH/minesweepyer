@@ -73,9 +73,16 @@ class Board:
             self.solutionBoard[loc[0] + 1, loc[1] + 1] += 1
 
     def toString(self, board=gameBoard):
-        retString = ""
+        retString = " " * 7
+        for i in range(self.COLS):
+            space_multiplier = 5
+            if i > 7:
+                space_multiplier = 4
+            retString += str(i + 1) + " " * space_multiplier
         for i in range(self.ROWS):
+            space_multiplier = 4
             retString += "\n"
+            retString += " " * space_multiplier
             for j in range(self.COLS):
                 retString += "+"
                 if j < self.COLS:
@@ -83,38 +90,64 @@ class Board:
                 if i < self.ROWS and j == self.COLS - 1:
                     retString += "+\n"
                     for h in range(self.COLS):
-                        retString += "|  " 
+                        if h == 0:
+                            retString += " "
+                            if i < 9:
+                                retString += " "
+                            retString += str(i + 1)
+                            retString += " "
+                        retString += "|  "
                         retString += str(board[i, h]) 
                         retString += "  "
                         if h == self.COLS-1:
                             retString += "|"
         # print final row border
-        retString += "\n"
+        retString += "\n    "
         retString += "+-----" * self.COLS
         retString += "+"
         return retString
 
     def addFlag(self, location):
-        self.flag_locations.add(location)
-        self.gameBoard[location] = "F"
+        if location not in self.flag_locations:
+            self.flag_locations.add(location)
+            self.gameBoard[location] = "F"
+        else:
+            self.flag_locations.discard(location)
+            self.gameBoard[location] = "?"
         print(self.toString())
 
     def notComplete(self):
         return not self.flag_locations == self.mine_locations
 
-    def findZeroes(self, location):
+    def findFrontline(self, location, checkedLocations=set()):
         if location in self.solutionBoard:
-            if self.solutionBoard[location] == 0 and self.gameBoard[location] == "?":
-                # print("found 0 at " + str(location))
-                self.gameBoard[location] = self.solutionBoard[location]
+            # uncover this square
+            self.gameBoard[location] = self.solutionBoard[location]
+            # is this not a 0? then stop
+            checkedLocations.add(location)
+            if self.gameBoard[location] != 0:
+                return
+            # am I a 0 and touching a 0? then continue
+            if      ((location[0], location[1] + 1) in self.solutionBoard and self.solutionBoard[location[0], location[1] + 1] == 0) \
+                or  ((location[0], location[1] - 1) in self.solutionBoard and self.solutionBoard[location[0], location[1] - 1] == 0) \
+                or  ((location[0] + 1, location[1]) in self.solutionBoard and self.solutionBoard[location[0] + 1, location[1]] == 0) \
+                or  ((location[0] - 1, location[1]) in self.solutionBoard and self.solutionBoard[location[0] - 1, location[1]] == 0) \
+                and self.gameBoard[location] == 0:
+                # return
+            # if self.solutionBoard[location] == 0 and self.gameBoard[location] == "?":
+            #     # print("found 0 at " + str(location))
                 # right
-                self.findZeroes((location[0], location[1] + 1))
+                if (location[0], location[1] + 1) not in checkedLocations:
+                    self.findFrontline((location[0], location[1] + 1), checkedLocations)
                 # left
-                self.findZeroes((location[0], location[1] - 1))
+                if (location[0], location[1] - 1) not in checkedLocations:
+                    self.findFrontline((location[0], location[1] - 1), checkedLocations)
                 # down
-                self.findZeroes((location[0] + 1,location[1]))
+                if (location[0] + 1,location[1]) not in checkedLocations:
+                    self.findFrontline((location[0] + 1,location[1]), checkedLocations)
                 # up
-                self.findZeroes((location[0] - 1,location[1]))
+                if (location[0] - 1,location[1]) not in checkedLocations:
+                    self.findFrontline((location[0] - 1,location[1]), checkedLocations)
 
     def uncoverSafeLocations(self, loc):
         # check for current location being flag
@@ -124,6 +157,9 @@ class Board:
         # check for current location being unknown
         elif self.gameBoard[loc] == "?":
             print("Cannot uncover at an unknown coordinate!")
+            return
+        if self.gameBoard[loc] == 0:
+            self.findFrontline(loc)
             return
         # check for any surrounding location being on the board AND a mine AND the gameboard does not have it flagged - game over
         if      (loc[0], loc[1] + 1) in self.solutionBoard and self.solutionBoard[loc[0], loc[1] + 1] == "*" and not self.gameBoard[loc[0], loc[1] + 1] == "F" \
@@ -160,7 +196,7 @@ class Board:
             if self.solutionBoard[location] == "*":
                 self.setGameOver()
             else:
-                self.findZeroes(location)
+                self.findFrontline(location)
                 self.gameBoard[location] = self.solutionBoard[location]
                 print(self.toString())
         else:

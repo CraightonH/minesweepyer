@@ -36,4 +36,5 @@ while(board.notComplete() and not board.gameOver):
 if board.gameOver:
     print("BOOM!!! Game over!")
 else:
+    print(board.toString(board.solutionBoard))
     print("Congratulations! You win!")
