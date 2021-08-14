@@ -1,7 +1,15 @@
 from Board import Board
+import argparse, sys
 
-board = Board()
-# board.debugInfo()
+parser = argparse.ArgumentParser()
+parser.add_argument("-r", "--rows", type=int, help="How many rows on the game board to generate")
+parser.add_argument("-c", "--cols", type=int, help="How many columns on the game board to generate")
+parser.add_argument("-m", "--mines", type=int, help="Override default number of calculated mines")
+args = parser.parse_args()
+
+print(args.rows, args.cols, args.mines) 
+
+board = Board(rows=args.rows, cols=args.cols, mines=args.mines)
 board.help()
 while(board.notComplete() and not board.gameOver):
     print(board.toString())
@@ -24,7 +32,7 @@ while(board.notComplete() and not board.gameOver):
         board.revealLocation(location)
 
 if board.gameOver:
-    print(board.toString())
+    print(board.toString(board.solutionBoard))
     print("BOOM!!! Game over!")
 else:
     print(board.toString(board.solutionBoard))

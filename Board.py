@@ -26,10 +26,10 @@ class Board:
 
     def __init__(self, cols=8, rows=8, mines=0):
         print("calculating difficulty...")
-        self.COLS = cols
-        self.ROWS = rows
+        if cols != None: self.COLS = cols
+        if rows != None: self.ROWS = rows
         self.max_mines = round(self.COLS * self.ROWS * self.mine_percentage)
-        if (mines != 0):
+        if mines != 0 and mines != None:
             self.max_mines = mines
         self.generateMineLocations()
         self.generateBoardHints()
@@ -152,6 +152,10 @@ class Board:
                 or  ((location[0], location[1] - 1) in self.solutionBoard and self.solutionBoard[location[0], location[1] - 1] == 0) \
                 or  ((location[0] + 1, location[1]) in self.solutionBoard and self.solutionBoard[location[0] + 1, location[1]] == 0) \
                 or  ((location[0] - 1, location[1]) in self.solutionBoard and self.solutionBoard[location[0] - 1, location[1]] == 0) \
+                or  ((location[0] - 1, location[1] - 1) in self.solutionBoard and self.solutionBoard[location[0] - 1, location[1] - 1] == 0) \
+                or  ((location[0] - 1, location[1] + 1) in self.solutionBoard and self.solutionBoard[location[0] - 1, location[1] + 1] == 0) \
+                or  ((location[0] + 1, location[1] - 1) in self.solutionBoard and self.solutionBoard[location[0] - 1, location[1] - 1] == 0) \
+                or  ((location[0] + 1, location[1] + 1) in self.solutionBoard and self.solutionBoard[location[0] - 1, location[1] + 1] == 0) \
                 and self.gameBoard[location] == 0:
                 # return
             # if self.solutionBoard[location] == 0 and self.gameBoard[location] == "?":
@@ -168,6 +172,18 @@ class Board:
                 # up
                 if (location[0] - 1,location[1]) not in checkedLocations:
                     self.findFrontline((location[0] - 1,location[1]), checkedLocations)
+                # top-left
+                if (location[0] - 1, location[1] - 1) not in checkedLocations:
+                    self.findFrontline((location[0] - 1, location[1] - 1), checkedLocations)
+                # top-right
+                if (location[0] - 1, location[1] + 1) not in checkedLocations:
+                    self.findFrontline((location[0] - 1, location[1] + 1), checkedLocations)
+                # bottom-left
+                if (location[0] + 1,location[1] - 1) not in checkedLocations:
+                    self.findFrontline((location[0] + 1,location[1] - 1), checkedLocations)
+                # bottom-right
+                if (location[0] + 1,location[1] + 1) not in checkedLocations:
+                    self.findFrontline((location[0] + 1,location[1] + 1), checkedLocations)
 
     def uncoverSafeLocations(self, loc):
         # check for current location being flag
