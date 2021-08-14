@@ -34,7 +34,8 @@ class Board:
         self.generateMineLocations()
         self.generateBoardHints()
         print("have fun!")
-        print(self.toString())
+        print()
+        # print(self.toString())
         #print(self.toString(hidden=False))
         
     def generateMineLocations(self):
@@ -71,6 +72,25 @@ class Board:
             self.solutionBoard[loc[0] + 1, loc[1] - 1] += 1
         if (loc[0] + 1, loc[1] + 1) not in self.mine_locations and loc[0] + 1 < self.ROWS and loc[1] + 1 < self.COLS:
             self.solutionBoard[loc[0] + 1, loc[1] + 1] += 1
+
+    def help(self):
+        print("CHOOSE")
+        print("Choose a box to uncover by typing a comma separated list")
+        print("of coordinates in the form 'row,column' where 1,1 is the")
+        print("top left most box on the board.")
+        print("ie. '1,1'")
+        print()
+        print("FLAG")
+        print("Mark a flag by typing the letter 'f ' in front of your list.")
+        print("ie. 'f 2,2'")
+        print()
+        print("UNCOVER")
+        print("Uncover safe boxes by typing 'u ' before your coordinates and select")
+        print("a square that touches a flag such that it's guaranteed to not have an unflagged mine next to it.")
+        print("If you uncover at a coordinate that is not guaranteed to be safe and")
+        print("a mine is uncovered in the process, game over!")
+        print("ie. 'u 1,1'")
+        print()
 
     def toString(self, board=gameBoard):
         retString = " " * 7
@@ -114,7 +134,7 @@ class Board:
         else:
             self.flag_locations.discard(location)
             self.gameBoard[location] = "?"
-        print(self.toString())
+        # print(self.toString())
 
     def notComplete(self):
         return not self.flag_locations == self.mine_locations
@@ -189,7 +209,7 @@ class Board:
             self.gameBoard[loc[0] + 1, loc[1] - 1] = self.solutionBoard[loc[0] + 1, loc[1] - 1]
         if (loc[0] + 1, loc[1] + 1) in self.gameBoard and self.gameBoard[loc[0] + 1, loc[1] + 1] == "?":
             self.gameBoard[loc[0] + 1, loc[1] + 1] = self.solutionBoard[loc[0] + 1, loc[1] + 1]
-        print(self.toString())
+        # print(self.toString())
 
     def revealLocation(self, location):
         if location in self.solutionBoard:
@@ -198,13 +218,13 @@ class Board:
             else:
                 self.findFrontline(location)
                 self.gameBoard[location] = self.solutionBoard[location]
-                print(self.toString())
+                # print(self.toString())
         else:
             print("Location doesn't exist")
 
     def setGameOver(self):
         self.gameOver = True
-        print(self.toString(board=self.solutionBoard))
+        # print(self.toString(board=self.solutionBoard))
 
     def debugInfo(self):
         print("COLS: ", self.COLS)
