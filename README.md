@@ -1,6 +1,15 @@
 # minesweepyer
+A python minesweeper game that can be played in the console.
 
-A python minesweeper game.
+## Install
+
+Just clone this repo
+
+## Play
+
+```
+python3 console.py
+```
 
 Here's some output with the game board hidden:
 ```
