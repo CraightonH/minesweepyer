@@ -170,72 +170,78 @@ class Game:
                 # bottom-right
                 if (location[0] + 1,location[1] + 1) not in checkedLocations:
                     self.findFrontline((location[0] + 1,location[1] + 1), checkedLocations)
+            return True
+        return False
 
     def uncoverSafeLocations(self, loc):
-        # check for current location being flag
-        if self.gameBoard[loc] == "F":
-            print("Cannot uncover at a flag!")
-            return
-        # check for current location being unknown
-        elif self.gameBoard[loc] == "?":
-            print("Cannot uncover at an unknown coordinate!")
-            return
-        if self.gameBoard[loc] == 0:
-            self.findFrontline(loc)
-            return
-        # check for any surrounding location being on the board AND a mine AND the gameboard does not have it flagged - game over
-        if      (loc[0], loc[1] + 1) in self.solutionBoard and self.solutionBoard[loc[0], loc[1] + 1] == "*" and not self.gameBoard[loc[0], loc[1] + 1] == "F" \
-            or  (loc[0], loc[1] - 1) in self.solutionBoard and self.solutionBoard[loc[0], loc[1] - 1] == "*" and not self.gameBoard[loc[0], loc[1] - 1] == "F" \
-            or (loc[0] - 1, loc[1]) in self.solutionBoard and self.solutionBoard[loc[0] - 1, loc[1]] == "*" and not self.gameBoard[loc[0] - 1, loc[1]] == "F" \
-            or (loc[0] + 1, loc[1]) in self.solutionBoard and self.solutionBoard[loc[0] + 1, loc[1]] == "*" and not self.gameBoard[loc[0] + 1, loc[1]] == "F" \
-            or (loc[0] - 1, loc[1] - 1) in self.solutionBoard and self.solutionBoard[loc[0] - 1, loc[1] - 1] == "*" and not self.gameBoard[loc[0] - 1, loc[1] - 1] == "F" \
-            or (loc[0] - 1, loc[1] + 1) in self.solutionBoard and self.solutionBoard[loc[0] - 1, loc[1] + 1] == "*" and not self.gameBoard[loc[0] - 1, loc[1] + 1] == "F" \
-            or (loc[0] + 1, loc[1] - 1) in self.solutionBoard and self.solutionBoard[loc[0] + 1, loc[1] - 1] == "*" and not self.gameBoard[loc[0] + 1, loc[1] - 1] == "F" \
-            or (loc[0] + 1, loc[1] + 1) in self.solutionBoard and self.solutionBoard[loc[0] + 1, loc[1] + 1] == "*" and not self.gameBoard[loc[0] + 1, loc[1] + 1] == "F" :
-            self.setGameOver()
-            return
-        # check for any surrounding location being on the board AND unknown - uncover
-        if (loc[0], loc[1] + 1) in self.gameBoard and self.gameBoard[loc[0], loc[1] + 1] == "?":
-            self.gameBoard[loc[0], loc[1] + 1] = self.solutionBoard[loc[0], loc[1] + 1]
-        if (loc[0], loc[1] - 1) in self.gameBoard and self.gameBoard[loc[0], loc[1] - 1] == "?":
-            self.gameBoard[loc[0], loc[1] - 1] = self.solutionBoard[loc[0], loc[1] - 1]
-        if (loc[0] - 1, loc[1]) in self.gameBoard and self.gameBoard[loc[0] - 1, loc[1]] == "?":
-            self.gameBoard[loc[0] - 1, loc[1]] = self.solutionBoard[loc[0] - 1, loc[1]]
-        if (loc[0] + 1, loc[1]) in self.gameBoard and self.gameBoard[loc[0] + 1, loc[1]] == "?":
-            self.gameBoard[loc[0] + 1, loc[1]] = self.solutionBoard[loc[0] + 1, loc[1]]
-        if (loc[0] - 1, loc[1] - 1) in self.gameBoard and self.gameBoard[loc[0] - 1, loc[1] - 1] == "?":
-            self.gameBoard[loc[0] - 1, loc[1] - 1] = self.solutionBoard[loc[0] - 1, loc[1] - 1]
-        if (loc[0] - 1, loc[1] + 1) in self.gameBoard and self.gameBoard[loc[0] - 1, loc[1] + 1] == "?":
-            self.gameBoard[loc[0] - 1, loc[1] + 1] = self.solutionBoard[loc[0] - 1, loc[1] + 1]
-        if (loc[0] + 1, loc[1] - 1) in self.gameBoard and self.gameBoard[loc[0] + 1, loc[1] - 1] == "?":
-            self.gameBoard[loc[0] + 1, loc[1] - 1] = self.solutionBoard[loc[0] + 1, loc[1] - 1]
-        if (loc[0] + 1, loc[1] + 1) in self.gameBoard and self.gameBoard[loc[0] + 1, loc[1] + 1] == "?":
-            self.gameBoard[loc[0] + 1, loc[1] + 1] = self.solutionBoard[loc[0] + 1, loc[1] + 1]
-        # print(self.toString())
+        if loc in self.solutionBoard:
+            # check for current location being flag
+            if self.gameBoard[loc] == "F":
+                print("Cannot uncover at a flag!")
+                return False
+            # check for current location being unknown
+            elif self.gameBoard[loc] == "?":
+                print("Cannot uncover at an unknown coordinate!")
+                return False
+            if self.gameBoard[loc] == 0:
+                self.findFrontline(loc)
+                return False
+            # check for any surrounding location being on the board AND a mine AND the gameboard does not have it flagged - game over
+            if      (loc[0], loc[1] + 1) in self.solutionBoard and self.solutionBoard[loc[0], loc[1] + 1] == "*" and not self.gameBoard[loc[0], loc[1] + 1] == "F" \
+                or  (loc[0], loc[1] - 1) in self.solutionBoard and self.solutionBoard[loc[0], loc[1] - 1] == "*" and not self.gameBoard[loc[0], loc[1] - 1] == "F" \
+                or (loc[0] - 1, loc[1]) in self.solutionBoard and self.solutionBoard[loc[0] - 1, loc[1]] == "*" and not self.gameBoard[loc[0] - 1, loc[1]] == "F" \
+                or (loc[0] + 1, loc[1]) in self.solutionBoard and self.solutionBoard[loc[0] + 1, loc[1]] == "*" and not self.gameBoard[loc[0] + 1, loc[1]] == "F" \
+                or (loc[0] - 1, loc[1] - 1) in self.solutionBoard and self.solutionBoard[loc[0] - 1, loc[1] - 1] == "*" and not self.gameBoard[loc[0] - 1, loc[1] - 1] == "F" \
+                or (loc[0] - 1, loc[1] + 1) in self.solutionBoard and self.solutionBoard[loc[0] - 1, loc[1] + 1] == "*" and not self.gameBoard[loc[0] - 1, loc[1] + 1] == "F" \
+                or (loc[0] + 1, loc[1] - 1) in self.solutionBoard and self.solutionBoard[loc[0] + 1, loc[1] - 1] == "*" and not self.gameBoard[loc[0] + 1, loc[1] - 1] == "F" \
+                or (loc[0] + 1, loc[1] + 1) in self.solutionBoard and self.solutionBoard[loc[0] + 1, loc[1] + 1] == "*" and not self.gameBoard[loc[0] + 1, loc[1] + 1] == "F" :
+                return self.setGameOver()
+            # check for any surrounding location being on the board AND unknown - uncover
+            if (loc[0], loc[1] + 1) in self.gameBoard and self.gameBoard[loc[0], loc[1] + 1] == "?":
+                self.gameBoard[loc[0], loc[1] + 1] = self.solutionBoard[loc[0], loc[1] + 1]
+            if (loc[0], loc[1] - 1) in self.gameBoard and self.gameBoard[loc[0], loc[1] - 1] == "?":
+                self.gameBoard[loc[0], loc[1] - 1] = self.solutionBoard[loc[0], loc[1] - 1]
+            if (loc[0] - 1, loc[1]) in self.gameBoard and self.gameBoard[loc[0] - 1, loc[1]] == "?":
+                self.gameBoard[loc[0] - 1, loc[1]] = self.solutionBoard[loc[0] - 1, loc[1]]
+            if (loc[0] + 1, loc[1]) in self.gameBoard and self.gameBoard[loc[0] + 1, loc[1]] == "?":
+                self.gameBoard[loc[0] + 1, loc[1]] = self.solutionBoard[loc[0] + 1, loc[1]]
+            if (loc[0] - 1, loc[1] - 1) in self.gameBoard and self.gameBoard[loc[0] - 1, loc[1] - 1] == "?":
+                self.gameBoard[loc[0] - 1, loc[1] - 1] = self.solutionBoard[loc[0] - 1, loc[1] - 1]
+            if (loc[0] - 1, loc[1] + 1) in self.gameBoard and self.gameBoard[loc[0] - 1, loc[1] + 1] == "?":
+                self.gameBoard[loc[0] - 1, loc[1] + 1] = self.solutionBoard[loc[0] - 1, loc[1] + 1]
+            if (loc[0] + 1, loc[1] - 1) in self.gameBoard and self.gameBoard[loc[0] + 1, loc[1] - 1] == "?":
+                self.gameBoard[loc[0] + 1, loc[1] - 1] = self.solutionBoard[loc[0] + 1, loc[1] - 1]
+            if (loc[0] + 1, loc[1] + 1) in self.gameBoard and self.gameBoard[loc[0] + 1, loc[1] + 1] == "?":
+                self.gameBoard[loc[0] + 1, loc[1] + 1] = self.solutionBoard[loc[0] + 1, loc[1] + 1]
+            # print(self.toString())
+            return True
+        return False
 
     def addFlag(self, location):
-        if location not in self.flag_locations:
-            self.flag_locations.add(location)
-            self.gameBoard[location] = "F"
-        else:
-            self.flag_locations.discard(location)
-            self.gameBoard[location] = "?"
+        if location in self.solutionBoard:
+            if location not in self.flag_locations:
+                self.flag_locations.add(location)
+                self.gameBoard[location] = "F"
+            else:
+                self.flag_locations.discard(location)
+                self.gameBoard[location] = "?"
+            return True
+        return False
         # print(self.toString())
 
     def revealLocation(self, location):
+        result = False
         if location in self.solutionBoard:
             if self.solutionBoard[location] == "*":
-                self.setGameOver()
+                result = self.setGameOver()
             else:
-                self.findFrontline(location)
+                result = self.findFrontline(location)
                 self.gameBoard[location] = self.solutionBoard[location]
-                # print(self.toString())
-        else:
-            print("Location doesn't exist")
+        return result
 
     def setGameOver(self):
         self.gameOver = True
-        # print(self.toString(board=self.solutionBoard))
+        return self.gameOver
 
     def debugInfo(self):
         print("COLS: ", self.COLS)
